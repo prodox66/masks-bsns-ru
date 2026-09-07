@@ -8,7 +8,6 @@
     const MASK_DIRECTORY_PATH = 'NewUI/masks/';
     const MASK_INDEX_PATH = `${MASK_DIRECTORY_PATH}files.js`;
     const MASK_DATA_DIRECTORY_PATH = `${MASK_DIRECTORY_PATH}data/`;
-    const PAGE_SIZE = 30;
     const CALLER_ID = 'readyBoxMasks';
     const CONTENT_TYPE = 'masks';
     const LIBRARY_ID = 'masks';
@@ -35,7 +34,6 @@
         library: LIBRARY_ID,
         callerId: CALLER_ID,
         contentType: CONTENT_TYPE,
-        pageSize: PAGE_SIZE,
         maskDirectoryUrl: resolveUrl(MASK_DIRECTORY_PATH, SITE_ROOT_URL),
         maskIndexUrl: resolveUrl(MASK_INDEX_PATH, SITE_ROOT_URL),
         maskDataDirectoryUrl: resolveUrl(MASK_DATA_DIRECTORY_PATH, SITE_ROOT_URL),

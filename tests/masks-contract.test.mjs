@@ -43,7 +43,8 @@ const indexedNames = Array.from(evaluateGlobal(indexSource, INDEX_GLOBAL_KEY, MA
 assert.equal(sourceNames.length, 114, 'the real source set must contain all 114 accepted masks');
 assert.deepEqual(indexedNames.toSorted(), sourceNames.toSorted(), 'the index must contain each source mask exactly once');
 assert.equal(new Set(indexedNames).size, indexedNames.length, 'the index must not contain duplicates');
-assert.match(runtimeSource, new RegExp(`const PAGE_SIZE = ${EXPECTED_PAGE_SIZE};`), 'page size must stay centralized at 30');
+assert.doesNotMatch(runtimeSource, new RegExp(`const PAGE_SIZE = ${EXPECTED_PAGE_SIZE};`), 'content host must inherit common gallery geometry');
+assert.match(gallerySource, /BZNNewUILibraryWindow\.pageSize\(\)/, 'provider fallback must resolve the shared primitive page size');
 assert.match(runtimeSource, /https:\/\/library-ui\.bsns\.ru\//, 'shared interface URL must be centralized');
 assert.match(runtimeSource, /NewUI\/masks\//, 'public directory must preserve the Canvas path contract');
 assert.match(gallerySource, /class MaskLibrarySite/, 'the gallery must keep one object owner');

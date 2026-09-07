@@ -69,20 +69,21 @@
         }
 
         // Function: the fixed gallery page is a deterministic slice of the immutable mask index.
-        providePage(context = {}) {
-            const pageSize = Number(context.pageSize) || this.configuration.pageSize;
+        async providePage(context = {}) {
+            const requestedPageSize = Number(context.pageSize);
+            const pageSize = requestedPageSize > 0 ? requestedPageSize : await window.BZNNewUILibraryWindow.pageSize();
             const pageCount = Math.max(1, Math.ceil(this.files.length / pageSize));
             const page = Math.max(1, Math.min(pageCount, Number(context.page) || 1));
             const offset = (page - 1) * pageSize;
             const names = this.files.slice(offset, offset + pageSize);
-            return Promise.resolve(Object.freeze({
+            return Object.freeze({
                 ok: true,
                 page,
                 page_size: pageSize,
                 pages: pageCount,
                 total: this.files.length,
                 items: Object.freeze(names.map((name, pageIndex) => this.item(name, offset + pageIndex))),
-            }));
+            });
         }
 
         // Function: the real masks open through the reusable window primitive and its masks-only profile.
