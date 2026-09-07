@@ -1,0 +1,8 @@
+node_modules/
+test-results/
+playwright-report/
+*.log
+
+# Real binary content and generated indexes are deployed independently through FTP.
+NewUI/masks/*
+!NewUI/masks/.gitkeep
