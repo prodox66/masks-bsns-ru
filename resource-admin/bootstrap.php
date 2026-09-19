@@ -28,7 +28,15 @@ final class BznResourceEngineGateway
     public function assetUrl(string $assetName): string
     {
         $safeAssetName = basename($assetName);
-        return self::ENGINE_PUBLIC_ORIGIN . '/' . self::ENGINE_DIRECTORY . '/' . rawurlencode($safeAssetName);
+        $assetPath = $this->engineDirectory() . DIRECTORY_SEPARATOR . $safeAssetName;
+        $assetVersion = is_file($assetPath) ? max(0, (int) filemtime($assetPath)) : 0;
+        $versionQuery = $assetVersion > 0 ? '?v=' . $assetVersion : '';
+        return self::ENGINE_PUBLIC_ORIGIN
+            . '/'
+            . self::ENGINE_DIRECTORY
+            . '/'
+            . rawurlencode($safeAssetName)
+            . $versionQuery;
     }
 
     /** Executes only an agreed Resource Engine endpoint. */
