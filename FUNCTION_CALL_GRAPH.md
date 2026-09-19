@@ -13,3 +13,11 @@
 `mask-gallery.js::MaskLibrarySite.open <- index.html::#openMaskLibrary click`
 
 `mask-gallery.js::MaskLibrarySite.initialize <- mask-gallery.js::module bootstrap`
+
+`resource-admin/bootstrap.php::BznResourceEngineGateway.engineDirectory <- BznResourceEngineGateway.run`
+
+`resource-admin/bootstrap.php::BznResourceEngineGateway.assetUrl <- resource-admin/admin.php`
+
+`resource-admin/bootstrap.php::BznResourceEngineGateway.run <- resource-admin/api.php, resource-admin/admin-api.php`
+
+`resource-admin/admin.php::BZNResourceAdmin.mount <- standalone browser load`
