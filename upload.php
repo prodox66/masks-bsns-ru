@@ -19,6 +19,10 @@ const MAX_UPLOAD_FILES = 50;
 const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
 const FILES_GLOBAL_KEY = 'BZNReadyMaskFiles';
 const DATA_GLOBAL_KEY = 'BZNReadyMaskData';
+const REVISION_GLOBAL_KEY = 'BZNReadyMaskRevision';
+const MASK_SORT_EQUAL = 0;
+const MASK_MILLISECONDS_PER_SECOND = 1000;
+const MASK_CLI_REBUILD_ARGUMENT = '--rebuild';
 
 $rootDirectory = __DIR__;
 $maskDirectory = $rootDirectory . DIRECTORY_SEPARATOR . 'NewUI' . DIRECTORY_SEPARATOR . 'masks';
@@ -139,6 +143,7 @@ function removeDirectoryRecursive(string $directory): void
     @rmdir($directory);
 }
 
+// Function: upload gallery and generated payloads share newest-first ordering, with stable filename ties.
 function listMaskNames(string $maskDirectory, array $supportedMimeByExtension): array
 {
     if (!is_dir($maskDirectory)) {
@@ -147,7 +152,9 @@ function listMaskNames(string $maskDirectory, array $supportedMimeByExtension): 
 
     $names = [];
     $sizes = [];
+    $modified = [];
 
+    // Loop: capture metadata once so sorting never re-reads the directory or image contents.
     foreach (new DirectoryIterator($maskDirectory) as $entry) {
         if (!$entry->isFile()) {
             continue;
@@ -159,17 +166,19 @@ function listMaskNames(string $maskDirectory, array $supportedMimeByExtension): 
         if (isset($supportedMimeByExtension[$extension])) {
             $names[] = $name;
             $sizes[$name] = $entry->getSize();
+            $modified[$name] = $entry->getMTime();
         }
     }
 
-    // Sort by file name first; when names compare as equal, use file size from small to large.
-    // Try to stay close to Node localeCompare('ru', { numeric: true, sensitivity: 'base' }).
+    // Branch: preserve the previous locale-aware tie-break after comparing upload modification times.
     if (class_exists('Collator')) {
         $collator = new Collator('ru_RU');
         $collator->setAttribute(Collator::NUMERIC_COLLATION, Collator::ON);
         $collator->setStrength(Collator::PRIMARY);
 
-        usort($names, static function (string $left, string $right) use ($collator, $sizes): int {
+        usort($names, static function (string $left, string $right) use ($collator, $sizes, $modified): int {
+            $dateComparison = $modified[$right] <=> $modified[$left];
+            if ($dateComparison !== MASK_SORT_EQUAL) return $dateComparison;
             $comparison = $collator->compare($left, $right);
 
             if ($comparison !== false && $comparison !== 0) {
@@ -183,7 +192,9 @@ function listMaskNames(string $maskDirectory, array $supportedMimeByExtension): 
                 : strcmp($left, $right);
         });
     } else {
-        usort($names, static function (string $left, string $right) use ($sizes): int {
+        usort($names, static function (string $left, string $right) use ($sizes, $modified): int {
+            $dateComparison = $modified[$right] <=> $modified[$left];
+            if ($dateComparison !== MASK_SORT_EQUAL) return $dateComparison;
             $comparison = strnatcasecmp($left, $right);
 
             if ($comparison !== 0) {
@@ -286,12 +297,15 @@ function rebuildMaskData(
             atomicWrite($temporaryDataDirectory . DIRECTORY_SEPARATOR . $outputName, $outputSource);
         }
 
+        // Revision binds newly ordered numeric payload URLs to this complete rebuild.
+        $revision = (string) round(microtime(true) * MASK_MILLISECONDS_PER_SECOND);
         $indexSource = "// Generated read-only data: every supported asset currently stored in NewUI/masks.\n"
             . "(() => {\n"
             . "    'use strict';\n\n"
             . '    const GLOBAL_KEY = ' . jsonForJs(FILES_GLOBAL_KEY) . ";\n"
             . '    const FILES = Object.freeze(' . jsonForJs($names, JSON_PRETTY_PRINT) . ");\n"
             . "    window[GLOBAL_KEY] = FILES;\n"
+            . '    window[' . jsonForJs(REVISION_GLOBAL_KEY) . '] = ' . jsonForJs($revision) . ";\n"
             . "})();\n";
 
         $temporaryIndexFile = tempnam($maskDirectory, '.files-index-');
@@ -537,6 +551,11 @@ $formPassword = $authorized ? $directPassword : '';
 $rebuild = static function () use ($maskDirectory, $dataDirectory, $indexFile, $lockFile, $supportedMimeByExtension): array {
     return rebuildMaskData($maskDirectory, $dataDirectory, $indexFile, $lockFile, $supportedMimeByExtension);
 };
+
+// Branch: an SSH maintenance command rebuilds only generated assets through the same locked owner.
+if (PHP_SAPI === 'cli' && in_array(MASK_CLI_REBUILD_ARGUMENT, $argv ?? [], true)) {
+    jsonResponse(['ok' => true, 'result' => $rebuild()]);
+}
 
 $message = '';
 $errorMessage = '';

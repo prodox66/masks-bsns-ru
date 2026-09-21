@@ -5,6 +5,9 @@
     const SITE_CONFIG_KEY = 'BZNMaskLibraryConfig';
     const LIBRARY_RUNTIME_CONFIG_KEY = 'BZNLibraryRuntimeConfig';
     const MASK_FILES_KEY = 'BZNReadyMaskFiles';
+    const MASK_REVISION_KEY = 'BZNReadyMaskRevision';
+    const CATALOG_REFRESH_QUERY = 'catalog';
+    const CATALOG_REVISION_QUERY = 'revision';
     const RESOURCE_LIBRARY_KEY = 'BZNResourceLibrary';
     const OPEN_BUTTON_ID = 'openMaskLibrary';
     const STATUS_ID = 'maskLibraryStatus';
@@ -21,6 +24,7 @@
         constructor(configuration) {
             this.configuration = configuration;
             this.files = Object.freeze(Array.from(window[MASK_FILES_KEY] || {}, (name) => String(name)));
+            this.revision = String(window[MASK_REVISION_KEY] || '');
             this.openButton = document.getElementById(OPEN_BUTTON_ID);
             this.statusNode = document.getElementById(STATUS_ID);
         }
@@ -57,13 +61,16 @@
             const extension = String(name.split('.').pop() || '').toLowerCase();
             const url = new URL(encodeURIComponent(name), this.configuration.maskDirectoryUrl).href;
             const dataFileName = `${String(index).padStart(DATA_INDEX_WIDTH, '0')}${DATA_SCRIPT_EXTENSION}`;
+            const dataUrl = new URL(dataFileName, this.configuration.maskDataDirectoryUrl);
+            // Branch: a reordered index must not reuse a cached payload belonging to another mask.
+            if (this.revision) dataUrl.searchParams.set(CATALOG_REVISION_QUERY, this.revision);
             return Object.freeze({
                 name,
                 extension,
                 mime: MIME_BY_EXTENSION[extension] || DEFAULT_MIME,
                 preview: MASK_PREVIEW_KIND,
                 thumbnail_url: url,
-                data_script_url: new URL(dataFileName, this.configuration.maskDataDirectoryUrl).href,
+                data_script_url: dataUrl.href,
                 url,
             });
         }
@@ -86,8 +93,25 @@
             });
         }
 
-        // Function: the real masks open through the reusable window primitive and its masks-only profile.
-        open() {
+        // Function: every opening reads the current catalog, including uploads made in another tab.
+        async refreshIndex() {
+            const indexUrl = new URL(this.configuration.maskIndexUrl);
+            indexUrl.searchParams.set(CATALOG_REFRESH_QUERY, String(Date.now()));
+            await this.loadScript(indexUrl.href);
+            this.files = Object.freeze(Array.from(window[MASK_FILES_KEY] || {}, (name) => String(name)));
+            this.revision = String(window[MASK_REVISION_KEY] || '');
+            this.statusNode.textContent = STATUS_MESSAGES.ready.replace('{count}', String(this.files.length));
+        }
+
+        // Function: the real masks open through the reusable window primitive after refreshing the source.
+        async open() {
+            try {
+                await this.refreshIndex();
+            } catch (error) {
+                // Branch: expose a failed refresh rather than silently presenting an obsolete catalog.
+                this.statusNode.textContent = STATUS_MESSAGES.error;
+                return false;
+            }
             return window[RESOURCE_LIBRARY_KEY].open({
                 library: this.configuration.library,
                 callerId: this.configuration.callerId,
