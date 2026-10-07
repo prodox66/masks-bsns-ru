@@ -1,0 +1,225 @@
+{
+  "side": 512,
+  "orderingManifestName": "gradient-set.json",
+  "zero": 0,
+  "manifestName": "fitted-set.json",
+  "outputDirectory": "NewUI/masks",
+  "margin": 0.03,
+  "two": 2,
+  "separator": "-",
+  "precision": 6,
+  "base64Encoding": "base64",
+  "alphaMatrix": "0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 1",
+  "encoding": "utf8",
+  "one": 1,
+  "filePrefix": "002-Без-пустых-полей",
+  "luminanceMatrix": "-0.299 -0.587 -0.114 0 1 -0.299 -0.587 -0.114 0 1 -0.299 -0.587 -0.114 0 1 0 0 0 0 1",
+  "alphaMode": "alpha",
+  "filterId": "fitted-mask-tone",
+  "mimeByExtension": {
+    ".webp": "image/webp",
+    ".jpg": "image/jpeg",
+    ".png": "image/png"
+  },
+  "extension": ".svg",
+  "percent": 100,
+  "indexWidth": 2,
+  "luminanceMetadata": "<metadata id=\"bzn-mask-luminance\">white-reveal</metadata>",
+  "variants": [
+    {
+      "sourceName": "a7500594-a893-4719-b949-a3cbf4c37c70.png",
+      "label": "Косая-рамка-1",
+      "key": "fitted-1",
+      "sourceSha": "2f2dd93fe36b5cf4bdf23539ca01bbdeb928ffe772cc4929dd2f01d426573012",
+      "height": 724,
+      "width": 2172,
+      "bounds": [
+        14,
+        189,
+        2172,
+        518
+      ],
+      "mode": "invert-luminance"
+    },
+    {
+      "sourceName": "c2bc874e-509b-4b5e-8b3a-ae676a97eeca.png",
+      "label": "Косая-рамка-2",
+      "key": "fitted-2",
+      "sourceSha": "b230b57d4f203f23ab11f9692babc62486654c1679afa3fb46f73dae6ab698dd",
+      "height": 724,
+      "width": 2172,
+      "bounds": [
+        25,
+        159,
+        2167,
+        558
+      ],
+      "mode": "invert-luminance"
+    },
+    {
+      "sourceName": "f679f370-3bd8-41fa-addc-d8f9b6e0ce46.png",
+      "label": "Косая-рамка-3",
+      "key": "fitted-3",
+      "sourceSha": "1b7331ef62933eee4c6991cd942b964b779f48434821b95db994a3443f2f57ce",
+      "height": 724,
+      "width": 2172,
+      "bounds": [
+        20,
+        201,
+        2152,
+        505
+      ],
+      "mode": "invert-luminance"
+    },
+    {
+      "sourceName": "1c558af6-a8c8-4060-b25e-9a43f03d3d78.png",
+      "label": "Косая-рамка-4",
+      "key": "fitted-4",
+      "sourceSha": "d66d675ec01f2c1f304a57d88f315d6faeefdbf2e15e715b465af557ee2b23b0",
+      "height": 724,
+      "width": 2172,
+      "bounds": [
+        0,
+        176,
+        2172,
+        523
+      ],
+      "mode": "invert-luminance"
+    },
+    {
+      "sourceName": "64dc33c5-4711-4e74-84cb-bb4add6084a4.png",
+      "label": "Косая-рамка-5",
+      "key": "fitted-5",
+      "sourceSha": "f1318b8081cf34d01ed98c6e4ce22f9236483272155dd6b20d332ca6d676c1a8",
+      "height": 724,
+      "width": 2172,
+      "bounds": [
+        33,
+        212,
+        2139,
+        497
+      ],
+      "mode": "invert-luminance"
+    },
+    {
+      "sourceName": "a97210eb-9007-4f69-96f7-1273c88d10f8.png",
+      "label": "Косая-рамка-6",
+      "key": "fitted-6",
+      "sourceSha": "3f21676714dd18a60a3549c0294b23ec0a2f04e833c100cb448ec6bac6cec5ae",
+      "height": 724,
+      "width": 2172,
+      "bounds": [
+        12,
+        132,
+        2172,
+        577
+      ],
+      "mode": "invert-luminance"
+    },
+    {
+      "sourceName": "ba9d8897-6721-478a-b1ce-e0a2c4fcd20f.png",
+      "label": "Скруглённая-рамка",
+      "key": "fitted-7",
+      "sourceSha": "1468a6cbfa7f7e492db0cfd87b1095fb54d00e7f7021f87bb8726396351d5a2e",
+      "height": 1086,
+      "width": 1448,
+      "bounds": [
+        165,
+        105,
+        1284,
+        927
+      ],
+      "mode": "invert-luminance"
+    },
+    {
+      "sourceName": "23 копия.webp",
+      "label": "Кистевая-рамка-1",
+      "key": "fitted-8",
+      "sourceSha": "e4c0f1de140a276494bd24a68fd5692808f680bf248f95e3eceba9dad74a8482",
+      "height": 1496,
+      "width": 1400,
+      "bounds": [
+        118,
+        95,
+        1355,
+        1381
+      ],
+      "mode": "alpha"
+    },
+    {
+      "sourceName": "26 копия.webp",
+      "label": "Кистевая-рамка-2",
+      "key": "fitted-9",
+      "sourceSha": "9fde3135e9b3d547163282d9cec749f52c90e4b1bea095f1396e6a3a8174a4ef",
+      "height": 1133,
+      "width": 1400,
+      "bounds": [
+        81,
+        159,
+        1277,
+        1043
+      ],
+      "mode": "alpha"
+    },
+    {
+      "sourceName": "dc42ba22818541272f2b963661de5456 копия.webp",
+      "label": "Кистевая-рамка-3",
+      "key": "fitted-10",
+      "sourceSha": "9068a5664ed23315f7a78ca833d805aaa6b019116a81ecc90c3c1f4491595bf7",
+      "height": 1002,
+      "width": 1400,
+      "bounds": [
+        109,
+        107,
+        1238,
+        895
+      ],
+      "mode": "alpha"
+    },
+    {
+      "sourceName": "kisspng-ink-drawing-rectangular-mask-5a8fca83eb5488.3012980215193729319639 копия.webp",
+      "label": "Кистевая-рамка-4",
+      "key": "fitted-11",
+      "sourceSha": "02f009b8aa86eb048c283da542c3929aab8849f6b16c4aee9789268c0634a0a3",
+      "height": 1260,
+      "width": 1400,
+      "bounds": [
+        148,
+        197,
+        1195,
+        1108
+      ],
+      "mode": "alpha"
+    },
+    {
+      "sourceName": "post_84_49 копия.webp",
+      "label": "Кистевая-рамка-5",
+      "key": "fitted-12",
+      "sourceSha": "6e4fc692854b436bf47bebd003354ad00e5582ec10e42311649a4b071d87f5e2",
+      "height": 1400,
+      "width": 1400,
+      "bounds": [
+        109,
+        75,
+        1277,
+        1350
+      ],
+      "mode": "alpha"
+    },
+    {
+      "sourceName": "png-transparent-black-hair-fur-black-m-others-miscellaneous-black-hair-monochrome копия.webp",
+      "label": "Кистевая-рамка-6",
+      "key": "fitted-13",
+      "sourceSha": "60ecda1f3cbf462c976c7dab6fe4e2ebf4436ae822e36083a47ef29a9a23d6e2",
+      "height": 1147,
+      "width": 1400,
+      "bounds": [
+        166,
+        47,
+        1256,
+        1049
+      ],
+      "mode": "alpha"
+    }
+  ]
+}
