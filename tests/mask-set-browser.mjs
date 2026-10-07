@@ -9,6 +9,7 @@ import { workspace, settle } from '../../design-bzn-ru/NewUI/tests/Canvas_Contro
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const CONFIG = Object.freeze({ settings: process.env.BZN_MASK_SET || 'fitted-masks', cycles: 3, zero: 0, one: 1, two: 2, half: .5,
     side: 320, aspects: [1, 2.5, .4], alpha: 255, stride: 4, low: 16, high: 240, edgeTolerance: .018, centerTolerance: 24,
+    quarterTurn: 90, halfTurn: 180, threeQuarterTurn: 270, minimumRibbonRuns: 3,
     host: 'https://masks.bsns.ru', id: 'mask-set-layer', asset: 'mask-set-source', color: '#94785a',
     cards: '#bznResourceLibraryGrid .bzn-resource-library-item', modal: '#maskPainterModal', gallery: '#bznResourceLibraryModal',
     next: '#bznResourceLibraryNext', ready: '#maskPainterReadyMasksButton', save: '#maskPainterSaveButton',
@@ -47,6 +48,7 @@ class MaskSetChecks {
             let failures = config.zero, white = config.zero, black = config.zero, partial = config.zero;
             let left = image.width, right = config.zero, top = image.height, bottom = config.zero;
             const bands = Array.from({length: config.stride}, () => ({sum: config.zero, count: config.zero}));
+            const rows = Array.from({length: config.stride}, () => ({sum: config.zero, count: config.zero}));
             for (let y = config.zero; y < image.height; y += config.one) for (let x = config.zero; x < image.width; x += config.one) {
                 // Loop: RGB equality and full opacity are checked over the complete output, including the frame.
                 const offset = (y * image.width + x) * config.stride, value = pixels[offset];
@@ -54,10 +56,23 @@ class MaskSetChecks {
                 if (value >= config.high) white += config.one; else if (value <= config.low) black += config.one; else partial += config.one;
                 if (value > config.low) { left = Math.min(left,x); right = Math.max(right,x); top = Math.min(top,y); bottom = Math.max(bottom,y); }
                 const band = bands[Math.min(config.stride - config.one, Math.floor(x / image.width * config.stride))]; band.sum += value; band.count += config.one;
+                const rowBand = rows[Math.min(config.stride - config.one, Math.floor(y / image.height * config.stride))]; rowBand.sum += value; rowBand.count += config.one;
             }
+            // Independent silhouette probe counts detached white islands through the center of each axis.
+            const runs = vertical => {
+                let count = config.zero, prior = false;
+                const extent = vertical ? image.height : image.width;
+                for(let index = config.zero; index < extent; index += config.one) {
+                    const x = vertical ? Math.floor(image.width * config.half) : index;
+                    const y = vertical ? index : Math.floor(image.height * config.half);
+                    const white = pixels[(y * image.width + x) * config.stride] >= config.high;
+                    if(white && !prior) count += config.one; prior = white;
+                }
+                return count;
+            };
             const at = (u,v) => [...ctx.getImageData(Math.min(image.width-config.one,Math.floor(u*image.width)), Math.min(image.height-config.one,Math.floor(v*image.height)),config.one,config.one).data];
             return { failures, white, black, partial, size: [image.width,image.height], bounds: [left/image.width,top/image.height,(image.width-right-config.one)/image.width,(image.height-bottom-config.one)/image.height],
-                corners: [at(config.zero,config.zero),at(config.one,config.zero),at(config.zero,config.one),at(config.one,config.one)], center: at(config.half,config.half), bands: bands.map(band=>band.sum/band.count) };
+                corners: [at(config.zero,config.zero),at(config.one,config.zero),at(config.zero,config.one),at(config.one,config.one)], center: at(config.half,config.half), bands: bands.map(band=>band.sum/band.count), rows: rows.map(band=>band.sum/band.count), runs: [runs(false),runs(true)] };
         }, { dataUrl, config: CONFIG });
     }
     validate(record, result) {
@@ -66,6 +81,21 @@ class MaskSetChecks {
             // Independent requirement: removed letterbox borders leave a small nonzero margin on all four sides.
             result.bounds.forEach(value => assert.ok(value >= SETTINGS.margin - CONFIG.edgeTolerance && value <= SETTINGS.margin + CONFIG.edgeTolerance, `${record.name}: margin ${value}`));
             result.corners.forEach(pixel=>assert.deepEqual(pixel,[CONFIG.zero,CONFIG.zero,CONFIG.zero,CONFIG.alpha]));
+        }
+        if (CONFIG.settings === 'raster-masks') {
+            const variant = SETTINGS.variants.find(variant => variant.key === record.key);
+            if (variant.family === 'capsules') {
+                assert.ok(Math.max(...result.runs) >= CONFIG.minimumRibbonRuns,'Diagonal rounded strips remain separate');
+                result.corners.forEach(pixel=>assert.deepEqual(pixel,[CONFIG.zero,CONFIG.zero,CONFIG.zero,CONFIG.alpha]));
+            } else {
+                // Four independently measured quarter averages verify the exact cardinal fade and density direction.
+                const vertical = variant.angle === CONFIG.quarterTurn || variant.angle === CONFIG.threeQuarterTurn;
+                let bands = vertical ? [...result.rows] : [...result.bands];
+                if(variant.angle === CONFIG.halfTurn || variant.angle === CONFIG.threeQuarterTurn) bands.reverse();
+                assert.equal(bands[CONFIG.zero],CONFIG.alpha,'First quarter is completely white');
+                assert.equal(bands.at(-CONFIG.one),CONFIG.zero,'Last quarter is completely black');
+                assert.ok(bands[CONFIG.one] > bands[CONFIG.two],'Native raster gets denser across the middle');
+            }
         }
     }
     async select(record) {

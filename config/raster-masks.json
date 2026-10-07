@@ -1,0 +1,31 @@
+{
+    "outputDirectory": "NewUI/masks", "manifestName": "raster-set.json", "orderingManifestName": "gradient-set.json",
+    "filePrefix": "003-Растр", "separator": "-", "extension": ".svg", "indexWidth": 2,
+    "side": 512, "zero": 0, "one": 1, "two": 2, "half": 0.5, "precision": 6, "encoding": "utf8",
+    "luminanceMetadata": "<metadata id=\"bzn-mask-luminance\">white-reveal</metadata>",
+    "whiteTail": 0.25, "blackTail": 0.25, "margin": 0.03, "outside": 1,
+    "goldenRoot": 5, "basePitch": 0.03125, "radiusScale": 1.2, "growthExponent": 1.45,
+    "jitter": 0.2, "grainNodes": 8, "grainRadiusNoise": 0.3, "stripeFill": 1.08,
+    "noiseX": 12.9898, "noiseY": 78.233, "noiseScale": 43758.5453, "seed": 228,
+    "fullTurn": 360, "radiansTurn": 6.283185307179586,
+    "capsulePitch": 0.15, "capsuleWidth": 0.112, "capsuleThinWidth": 0.075,
+    "capsuleWidthsExponent": 0.22, "capsuleLengths": [0.68, 0.88, 1.02, 1.02, 0.88, 0.68],
+    "variants": [
+        {"key":"dots-right","label":"Точки-Скрыть-справа","family":"dots","angle":0},
+        {"key":"dots-left","label":"Точки-Скрыть-слева","family":"dots","angle":180},
+        {"key":"dots-bottom","label":"Точки-Скрыть-снизу","family":"dots","angle":90},
+        {"key":"dots-top","label":"Точки-Скрыть-сверху","family":"dots","angle":270},
+        {"key":"grain-right","label":"Зерно-Скрыть-справа","family":"grain","angle":0},
+        {"key":"grain-left","label":"Зерно-Скрыть-слева","family":"grain","angle":180},
+        {"key":"grain-bottom","label":"Зерно-Скрыть-снизу","family":"grain","angle":90},
+        {"key":"grain-top","label":"Зерно-Скрыть-сверху","family":"grain","angle":270},
+        {"key":"stripes-right","label":"Полосы-Скрыть-справа","family":"stripes","angle":0},
+        {"key":"stripes-left","label":"Полосы-Скрыть-слева","family":"stripes","angle":180},
+        {"key":"stripes-bottom","label":"Полосы-Скрыть-снизу","family":"stripes","angle":90},
+        {"key":"stripes-top","label":"Полосы-Скрыть-сверху","family":"stripes","angle":270},
+        {"key":"capsules-right","label":"Округлые-диагонали-Вправо","family":"capsules","angle":45},
+        {"key":"capsules-left","label":"Округлые-диагонали-Влево","family":"capsules","angle":-45},
+        {"key":"capsules-thin-right","label":"Тонкие-диагонали-Вправо","family":"capsules","angle":45,"thin":true},
+        {"key":"capsules-thin-left","label":"Тонкие-диагонали-Влево","family":"capsules","angle":-45,"thin":true}
+    ]
+}
