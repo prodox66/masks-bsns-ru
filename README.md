@@ -20,6 +20,14 @@ node tests/masks-browser.mjs
 
 После генерации по FTP загружается целиком локальная папка `NewUI/masks/`. Скрипт, интерфейс и конфигурация обновляются через Git. Сайт полностью статический; PHP и база данных не требуются.
 
+## Градиентные маски
+
+`config/gradient-masks.json` задаёт шесть направлений, три формы границы и белый край22%. `node NewUI/tools/build-gradient-masks.mjs` создаёт18SVG и точный manifest только этого набора; неизвестный или вручную изменённый файл с тем же именем прерывает генерацию. Обновление прежнего вывода допускается только при совпадении SHA с предыдущим manifest. Общий каталог и lazy data создаются прежним `build-ready-mask-data.mjs` после этого шага. Ресурсы остаются отдельно от Git.
+
+При публикации добавить только новые SVG, сохранить существующий production-каталог и выполнить штатный `php upload.php --rebuild`. Не заменять serverindex локальным, если состав различается. Opaque SVG видны на белой подложке галереи. Metadata `bzn-mask-luminance=white-reveal` сохраняет их RGB полярность при ready import; без этого marker прежние opaque/transparent masks работают по прежним правилам. Кисть не меняется.
+
+Проверки: `node tests/masks-contract.test.mjs`, `node --use-env-proxy tests/mask-gradients-browser.mjs` (3actual Canvas gallery/Use/import/pixelcycles). Browser использует Edge и общий frontend harness; `BZN_PUBLISHED=1` читает опубликованные frontend/resources.
+
 ## Единая админка ресурсов
 
 `resource-admin/` — тонкая исполняемая точка входа на PHP-домене. Она вызывает единый Resource Engine из соседнего репозитория `images.bsns.ru`; исходные картинки, каталог, эскизы и оптимизированные версии остаются в одном общем хранилище. Старый `upload.php` продолжает работать отдельно и не изменяется.

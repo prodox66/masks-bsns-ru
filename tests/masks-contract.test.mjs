@@ -14,6 +14,8 @@ const DATA_INDEX_WIDTH = 3;
 const DATA_SCRIPT_EXTENSION = '.js';
 const TEXT_ENCODING = 'utf8';
 const EXPECTED_PAGE_SIZE = 30;
+const MINIMUM_LEGACY_MASK_COUNT = 114;
+const LEGACY_ROOT_PHP = 'upload.php';
 
 // Function: the filesystem is the independent source used to verify the generated index.
 async function sourceMaskNames() {
@@ -40,7 +42,7 @@ const [sourceNames, indexSource, runtimeSource, gallerySource, rootEntries] = aw
 ]);
 const indexedNames = Array.from(evaluateGlobal(indexSource, INDEX_GLOBAL_KEY, MASK_INDEX_FILE) || {});
 
-assert.equal(sourceNames.length, 114, 'the real source set must contain all 114 accepted masks');
+assert.ok(sourceNames.length >= MINIMUM_LEGACY_MASK_COUNT, 'the source set retains the original masks and allows new resources');
 assert.deepEqual(indexedNames.toSorted(), sourceNames.toSorted(), 'the index must contain each source mask exactly once');
 assert.equal(new Set(indexedNames).size, indexedNames.length, 'the index must not contain duplicates');
 assert.doesNotMatch(runtimeSource, new RegExp(`const PAGE_SIZE = ${EXPECTED_PAGE_SIZE};`), 'content host must inherit common gallery geometry');
@@ -48,7 +50,7 @@ assert.match(gallerySource, /BZNNewUILibraryWindow\.pageSize\(\)/, 'provider fal
 assert.match(runtimeSource, /https:\/\/library-ui\.bsns\.ru\//, 'shared interface URL must be centralized');
 assert.match(runtimeSource, /NewUI\/masks\//, 'public directory must preserve the Canvas path contract');
 assert.match(gallerySource, /class MaskLibrarySite/, 'the gallery must keep one object owner');
-assert.equal(rootEntries.some((name) => name.toLowerCase().endsWith('.php')), false, 'the content site must stay static');
+assert.deepEqual(rootEntries.filter((name) => name.toLowerCase().endsWith('.php')), [LEGACY_ROOT_PHP], 'the existing upload handler remains the only root PHP entry');
 
 for (let index = 0; index < indexedNames.length; index += 1) {
     // Loop: every lazy data payload must decode to the exact bytes of its indexed mask.

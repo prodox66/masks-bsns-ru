@@ -1,0 +1,34 @@
+{
+    "outputDirectory": "NewUI/masks",
+    "manifestName": "gradient-set.json",
+    "filePrefix": "000-Градиент",
+    "separator": "-",
+    "indexWidth": 2,
+    "side": 512,
+    "zero": 0,
+    "one": 1,
+    "two": 2,
+    "half": 0.5,
+    "fullChannel": 255,
+    "percent": 100,
+    "precision": 6,
+    "whiteTail": 0.22,
+    "minimumWhiteTail": 0.2,
+    "curvature": 0.2,
+    "encoding": "utf8",
+    "maskId": "bzn-gradient-reveal",
+    "luminanceMetadata": "<metadata id=\"bzn-mask-luminance\">white-reveal</metadata>",
+    "directions": [
+        { "key": "right-left", "label": "Справа налево", "x": -1, "y": 0 },
+        { "key": "left-right", "label": "Слева направо", "x": 1, "y": 0 },
+        { "key": "top-bottom", "label": "Сверху вниз", "x": 0, "y": 1 },
+        { "key": "bottom-top", "label": "Снизу вверх", "x": 0, "y": -1 },
+        { "key": "diagonal-right", "label": "Диагональ вправо вниз", "x": 1, "y": 1 },
+        { "key": "diagonal-left", "label": "Диагональ влево вниз", "x": -1, "y": 1 }
+    ],
+    "curves": [
+        { "key": "linear", "label": "Прямой" },
+        { "key": "concave", "label": "Вогнутый" },
+        { "key": "convex", "label": "Выгнутый" }
+    ]
+}
