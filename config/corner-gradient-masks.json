@@ -7,7 +7,10 @@
     "zero": 0, "one": 1, "two": 2, "half": 0.5, "negativeOne": -1,
     "fullChannel": 255, "percent": 100, "precision": 6,
     "whiteTail": 0.25, "minimumWhiteTail": 0.2,
-    "blackTail": 0.25, "minimumBlackTail": 0.25,
+    "edgeCapture": 0.02, "minimumBlackArea": 0.25,
+    "quadraticMidBase": 0.25, "quadraticAreaBase": 0.16666666666666666,
+    "quadraticAreaFactor": 0.6666666666666666,
+    "backupPrefix": "bzn-corner-mask-225-",
     "encoding": "utf8",
     "luminanceMetadata": "<metadata id=\"bzn-mask-luminance\">white-reveal</metadata>",
     "directions": [
@@ -18,7 +21,7 @@
     ],
     "curves": [
         { "key": "linear", "label": "Прямой", "controlRatio": 0.5 },
-        { "key": "concave", "label": "Вогнутый", "controlRatio": 0 },
-        { "key": "convex", "label": "Выгнутый", "controlRatio": 1 }
+        { "key": "concave", "label": "Вогнутый", "controlRatio": 0.25 },
+        { "key": "convex", "label": "Выгнутый", "controlRatio": 0.8 }
     ]
 }
