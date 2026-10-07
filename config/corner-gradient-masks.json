@@ -1,0 +1,24 @@
+{
+    "outputDirectory": "NewUI/masks",
+    "manifestName": "corner-gradient-set.json",
+    "orderingManifestName": "gradient-set.json",
+    "filePrefix": "000-Угловой-градиент",
+    "separator": "-", "indexWidth": 2, "side": 512,
+    "zero": 0, "one": 1, "two": 2, "half": 0.5, "negativeOne": -1,
+    "fullChannel": 255, "percent": 100, "precision": 6,
+    "whiteTail": 0.25, "minimumWhiteTail": 0.2,
+    "blackTail": 0.25, "minimumBlackTail": 0.25,
+    "encoding": "utf8",
+    "luminanceMetadata": "<metadata id=\"bzn-mask-luminance\">white-reveal</metadata>",
+    "directions": [
+        { "key": "top-left", "label": "Верхний левый угол", "x": 1, "y": 1 },
+        { "key": "top-right", "label": "Верхний правый угол", "x": -1, "y": 1 },
+        { "key": "bottom-left", "label": "Нижний левый угол", "x": 1, "y": -1 },
+        { "key": "bottom-right", "label": "Нижний правый угол", "x": -1, "y": -1 }
+    ],
+    "curves": [
+        { "key": "linear", "label": "Прямой", "controlRatio": 0.5 },
+        { "key": "concave", "label": "Вогнутый", "controlRatio": 0 },
+        { "key": "convex", "label": "Выгнутый", "controlRatio": 1 }
+    ]
+}

@@ -11,6 +11,7 @@ const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const SETTINGS = JSON.parse(readFileSync(join(ROOT, 'config/geometric-masks.json'), 'utf8'));
 const MANIFEST = JSON.parse(readFileSync(join(ROOT, SETTINGS.outputDirectory, SETTINGS.manifestName), 'utf8'));
 const GRADIENTS = JSON.parse(readFileSync(join(ROOT, SETTINGS.outputDirectory, SETTINGS.gradientManifestName), 'utf8'));
+const CORNERS = JSON.parse(readFileSync(join(ROOT, SETTINGS.outputDirectory, 'corner-gradient-set.json'), 'utf8'));
 const CONFIG = Object.freeze({ cycles: 3, zero: 0, one: 1, two: 2, width: 256, height: 160, rgbaStride: 4, alphaIndex: 3,
     opaque: 255, grayTolerance: 8, samplingStride: 7, componentThreshold: 128, minimumComponents: 3, gridWidth: 64, gridHeight: 40,
     corner: .02, center: .5, timeout: 20000, id: 'geometric-mask-layer', asset: 'geometric-mask-source',
@@ -44,9 +45,13 @@ class GeometricChecks {
     }
     async openGallery() {
         await this.page.locator(CONFIG.ready).click(); await this.page.locator(CONFIG.cards).first().waitFor({ state: 'visible' });
-        const names = [...GRADIENTS.records, ...MANIFEST.records].map(record => record.name);
+        const names = [...GRADIENTS.records, ...CORNERS.records].map(record => record.name);
         const cards = await this.page.locator(CONFIG.cards).evaluateAll(nodes => nodes.map(node => [node.textContent, node.getAttribute('title'), node.querySelector('img')?.alt].join(' ')));
         names.forEach((name, index) => assert.ok(cards[index]?.includes(name), `order ${index}: ${name} ${cards[index]}`));
+        // New corner resources fill page1; the six preserved geometric originals remain together on page2.
+        await this.page.locator('#bznResourceLibraryNext').click();
+        await this.page.waitForFunction(({ selector, name }) => document.querySelector(selector)?.textContent?.includes(name)
+            || document.querySelector(`${selector} img`)?.alt?.includes(name), { selector: CONFIG.cards, name: MANIFEST.records[CONFIG.zero].name });
     }
     // Function: inspect rasterized sources independently of polygon generation and count actual separated white components.
     async source(record) {
@@ -98,7 +103,7 @@ class GeometricChecks {
     }
     async choose(index, expected) {
         const prior = await this.page.evaluate(id => BZNNewCanvasChrome.project().state.layers.find(layer => layer.id === id).image.mask.assetId, CONFIG.id);
-        await this.page.locator(CONFIG.cards).nth(GRADIENTS.records.length + index).click();
+        await this.page.locator(CONFIG.cards).nth(index).click();
         await this.page.locator('#bznLightboxFooter').getByRole('button', { name: 'Использовать', exact: true }).click();
         await this.page.waitForFunction(({ id, prior, ready }) => {
             const mask = BZNNewCanvasChrome.project().state.layers.find(layer => layer.id === id).image.mask;
