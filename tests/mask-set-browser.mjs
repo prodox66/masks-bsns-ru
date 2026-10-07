@@ -17,6 +17,9 @@ const CONFIG = Object.freeze({ settings: process.env.BZN_MASK_SET || 'fitted-mas
     output: mkdtempSync(join(tmpdir(), 'bzn-mask-set-')) });
 const SETTINGS = JSON.parse(readFileSync(join(ROOT, `config/${CONFIG.settings}.json`), 'utf8'));
 const MANIFEST = JSON.parse(readFileSync(join(ROOT, SETTINGS.outputDirectory, SETTINGS.manifestName), 'utf8'));
+const SELECTED_KEYS = process.env.BZN_MASK_KEYS?.split(',');
+const RECORDS = SELECTED_KEYS ? MANIFEST.records.filter(record => SELECTED_KEYS.includes(record.key)) : MANIFEST.records;
+assert.ok(RECORDS.length, 'The declared mask selection exists');
 
 class MaskSetChecks {
     constructor(page) { this.page = page; }
@@ -144,7 +147,7 @@ try {
     });
     for(let cycle=CONFIG.zero;cycle<CONFIG.cycles;cycle+=CONFIG.one){
         await checks.fixture(cycle);
-        for(const record of MANIFEST.records){
+        for(const record of RECORDS){
             // Every resource receives an actual native gallery choice, save and reopen in each clean cycle.
             const bytes=readFileSync(join(ROOT,SETTINGS.outputDirectory,record.name)); assert.equal(createHash('sha256').update(bytes).digest('hex'),record.sha256);
             const source=await checks.pixels(`data:image/svg+xml;base64,${bytes.toString('base64')}`); checks.validate(record,source);
@@ -152,7 +155,7 @@ try {
             await test.page.locator(CONFIG.modal).screenshot({path:join(CONFIG.output,`${cycle}-${record.key}.png`)});
         }
         await test.page.locator('#maskPainterCloseButton').click(); assert.deepEqual(test.errors,[]);
-        console.log(`PASS ${CONFIG.settings} ${cycle+CONFIG.one}: ${MANIFEST.records.length} native Use/save/reopen, aspect ${CONFIG.aspects[cycle]}, grayscale and silhouette`);
+        console.log(`PASS ${CONFIG.settings} ${cycle+CONFIG.one}: ${RECORDS.length} native Use/save/reopen, aspect ${CONFIG.aspects[cycle]}, grayscale and silhouette`);
     }
     writeFileSync(join(CONFIG.output,'report.json'),JSON.stringify({report,errors:test.errors},null,CONFIG.two));console.log(CONFIG.output);
 } catch(error){writeFileSync(join(CONFIG.output,'failure.txt'),String(error.stack||error));await test.page.screenshot({path:join(CONFIG.output,'failure.png')});console.error(CONFIG.output);throw error;}

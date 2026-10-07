@@ -10,3 +10,8 @@ design-bzn-ru/NewUI/Canvas_MaskPainter.js::readyMaskImportOptions/loadReadyMaskI
 tests/mask-set-browser.mjs::MaskSetChecks.validate/select <- three square/wide/tall cycles; grayscale/source/lazy/margins/corners andpaint-frame center distinction, actual paging/Use/save/reopen.
 
 References: splatter/brush/rounded/ink/watercolor/collage/vintage/painted frames. Existing texture variants are a curated fitted set, not claimed to be new photographed brush art. Four vector frame variants have a separate declared procedural owner.
+
+## 230 — установленная ошибка соответствия двух источников
+NewUI/tools/build-decorative-masks.mjs::DecorativeMaskSet.correctSelections <- main CLI --correct-selections; только source fields texture-1/texture-2 меняются местами, имена и порядок сохраняются. Предварительно SHA текущих2outputs проверяется по предыдущему manifest; backup2+manifest внеcatalog; остальные14SVG не писать.
+NewUI/tools/build-decorative-masks.mjs::DecorativeMaskSet.records/source <- correctSelections; прежний renderer/helper без изменений.
+upload.php::rebuildMaskData <- CLI after guarded2production update; остальных249resources sourceSHA/size/mtime должны сохраниться.

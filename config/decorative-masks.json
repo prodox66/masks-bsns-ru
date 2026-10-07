@@ -27,35 +27,35 @@
   "luminanceMetadata": "<metadata id=\"bzn-mask-luminance\">white-reveal</metadata>",
   "variants": [
     {
-      "height": 1400,
-      "sourceSha": "cb711cd608c20a97e03a67c90fe75975ac45a39aa50fb186c1e57f95a9b9dc19",
-      "sourceName": "kisspng-mask-photoshop-5acc16ad1925b2.023366901523324589103 копия.webp",
+      "height": 1317,
+      "sourceSha": "1706c6b67af83f675f4655e5f2d7d9b83349787ba9c9cb2e862e5a9d60c1b799",
+      "sourceName": "8 копия.webp",
       "label": "Брызги-прямоугольные",
       "family": "texture",
       "mode": "alpha",
       "key": "texture-1",
       "width": 1400,
       "bounds": [
-        68,
-        9,
-        1372,
-        1395
+        14,
+        1,
+        1397,
+        1315
       ]
     },
     {
-      "height": 1317,
-      "sourceSha": "1706c6b67af83f675f4655e5f2d7d9b83349787ba9c9cb2e862e5a9d60c1b799",
-      "sourceName": "8 копия.webp",
+      "height": 1400,
+      "sourceSha": "cb711cd608c20a97e03a67c90fe75975ac45a39aa50fb186c1e57f95a9b9dc19",
+      "sourceName": "kisspng-mask-photoshop-5acc16ad1925b2.023366901523324589103 копия.webp",
       "label": "Брызги-округлые",
       "family": "texture",
       "mode": "alpha",
       "key": "texture-2",
       "width": 1400,
       "bounds": [
-        14,
-        1,
-        1397,
-        1315
+        68,
+        9,
+        1372,
+        1395
       ]
     },
     {
@@ -278,5 +278,10 @@
   "leafY": 0.09,
   "seedOffset": 37,
   "frameHoleRadius": 0.315,
-  "leafWidth": 0.017
+  "leafWidth": 0.017,
+  "selectionCorrectionKeys": [
+    "texture-1",
+    "texture-2"
+  ],
+  "selectionBackupPrefix": "bzn-mask-230-"
 }
