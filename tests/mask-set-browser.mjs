@@ -97,6 +97,14 @@ class MaskSetChecks {
                 assert.ok(bands[CONFIG.one] > bands[CONFIG.two],'Native raster gets denser across the middle');
             }
         }
+        if (CONFIG.settings === 'decorative-masks') {
+            const variant = SETTINGS.variants.find(variant => variant.key === record.key);
+            result.corners.forEach(pixel=>assert.deepEqual(pixel,[CONFIG.zero,CONFIG.zero,CONFIG.zero,CONFIG.alpha]));
+            result.bounds.forEach(value=>assert.ok(value >= SETTINGS.margin - CONFIG.edgeTolerance && value <= SETTINGS.ornamentInset,`${record.name}: small decorative outside gap ${value}`));
+            // The painted border is intentionally separate from a mask revealing the image center.
+            if(variant.family === 'painted-frame') assert.equal(result.center[CONFIG.zero],CONFIG.zero,'Painted frame hides its center');
+            if(variant.family === 'ornament') assert.equal(result.center[CONFIG.zero],CONFIG.alpha,'Ornamental mask keeps its center visible');
+        }
     }
     async select(record) {
         await this.page.locator(CONFIG.ready).click(); await this.page.locator(CONFIG.cards).first().waitFor({state:'visible'});

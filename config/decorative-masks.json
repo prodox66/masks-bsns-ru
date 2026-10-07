@@ -1,0 +1,282 @@
+{
+  "side": 512,
+  "orderingManifestName": "gradient-set.json",
+  "zero": 0,
+  "manifestName": "decorative-set.json",
+  "outputDirectory": "NewUI/masks",
+  "margin": 0.03,
+  "two": 2,
+  "separator": "-",
+  "precision": 6,
+  "base64Encoding": "base64",
+  "alphaMatrix": "0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 1",
+  "encoding": "utf8",
+  "one": 1,
+  "filePrefix": "004-Декоративная",
+  "luminanceMatrix": "-0.299 -0.587 -0.114 0 1 -0.299 -0.587 -0.114 0 1 -0.299 -0.587 -0.114 0 1 0 0 0 0 1",
+  "alphaMode": "alpha",
+  "filterId": "fitted-mask-tone",
+  "mimeByExtension": {
+    ".webp": "image/webp",
+    ".jpg": "image/jpeg",
+    ".png": "image/png"
+  },
+  "extension": ".svg",
+  "percent": 100,
+  "indexWidth": 2,
+  "luminanceMetadata": "<metadata id=\"bzn-mask-luminance\">white-reveal</metadata>",
+  "variants": [
+    {
+      "height": 1400,
+      "sourceSha": "cb711cd608c20a97e03a67c90fe75975ac45a39aa50fb186c1e57f95a9b9dc19",
+      "sourceName": "kisspng-mask-photoshop-5acc16ad1925b2.023366901523324589103 копия.webp",
+      "label": "Брызги-прямоугольные",
+      "family": "texture",
+      "mode": "alpha",
+      "key": "texture-1",
+      "width": 1400,
+      "bounds": [
+        68,
+        9,
+        1372,
+        1395
+      ]
+    },
+    {
+      "height": 1317,
+      "sourceSha": "1706c6b67af83f675f4655e5f2d7d9b83349787ba9c9cb2e862e5a9d60c1b799",
+      "sourceName": "8 копия.webp",
+      "label": "Брызги-округлые",
+      "family": "texture",
+      "mode": "alpha",
+      "key": "texture-2",
+      "width": 1400,
+      "bounds": [
+        14,
+        1,
+        1397,
+        1315
+      ]
+    },
+    {
+      "height": 1400,
+      "sourceSha": "cc2aa280688a7261b4db06582255cc00d90e14656c2aa6014fa92c1edc916de5",
+      "sourceName": "post_84_49.webp",
+      "label": "Сухая-кисть",
+      "family": "texture",
+      "mode": "alpha",
+      "key": "texture-3",
+      "width": 1400,
+      "bounds": [
+        16,
+        11,
+        1389,
+        1391
+      ]
+    },
+    {
+      "height": 974,
+      "sourceSha": "8a63242cba3d9be1b505f1e73ccfb43e7a490840e62f507b0e92c71c18dd5560",
+      "sourceName": "dry-brush-stroke-24.webp",
+      "label": "Кисть-неровный-край",
+      "family": "texture",
+      "mode": "alpha",
+      "key": "texture-4",
+      "width": 974,
+      "bounds": [
+        6,
+        3,
+        974,
+        974
+      ]
+    },
+    {
+      "height": 2337,
+      "sourceSha": "7ee95275643e6ecadcbe2bdfe2f49cd9e981b081deea69357363bf10a4748997",
+      "sourceName": "23.webp",
+      "label": "Акварель-прямоугольная",
+      "family": "texture",
+      "mode": "invert-luminance",
+      "key": "texture-5",
+      "width": 2337,
+      "bounds": [
+        0,
+        0,
+        2337,
+        2337
+      ]
+    },
+    {
+      "height": 688,
+      "sourceSha": "c4f5cc84b35d7093a5e5af8932679997bef61ee347fc060095cd79cf71825372",
+      "sourceName": "4545455.jpg",
+      "label": "Акварель-облако",
+      "family": "texture",
+      "mode": "invert-luminance",
+      "key": "texture-6",
+      "width": 1008,
+      "bounds": [
+        8,
+        32,
+        1008,
+        622
+      ]
+    },
+    {
+      "height": 3355,
+      "sourceSha": "e78ba7477f943552f7abb3ba209fba6161a9dc7730ac4e9abfa6d6ee15512b76",
+      "sourceName": "Circle 14.png",
+      "label": "Чернила-округлые",
+      "family": "texture",
+      "mode": "alpha",
+      "key": "texture-7",
+      "width": 3048,
+      "bounds": [
+        0,
+        0,
+        3048,
+        3355
+      ]
+    },
+    {
+      "height": 1197,
+      "sourceSha": "1397b8228b9932f90f3a16e52a36dccb1f8d4c0a9943ff3022b1bd2fd52673cc",
+      "sourceName": "4d920ba66661ff60df8abdfa613671dd копия.webp",
+      "label": "Волокнистый-край",
+      "family": "texture",
+      "mode": "alpha",
+      "key": "texture-8",
+      "width": 1400,
+      "bounds": [
+        0,
+        0,
+        1400,
+        1197
+      ]
+    },
+    {
+      "height": 500,
+      "sourceSha": "ae226e0e629878e097be8b3b58ecb41128fa331071f69350089122a5ff59387e",
+      "sourceName": "ffgfgdfgfg.webp",
+      "label": "Коллаж-листва",
+      "family": "texture",
+      "mode": "alpha",
+      "key": "texture-9",
+      "width": 500,
+      "bounds": [
+        0,
+        0,
+        500,
+        500
+      ]
+    },
+    {
+      "height": 618,
+      "sourceSha": "227c4c7a97214b7f78dd13fc3fb330e946b69d344e401ce01915b6dba1dcd21c",
+      "sourceName": "45yrtehvdfhgb.webp",
+      "label": "Коллаж-мазки",
+      "family": "texture",
+      "mode": "alpha",
+      "key": "texture-10",
+      "width": 800,
+      "bounds": [
+        0,
+        12,
+        791,
+        618
+      ]
+    },
+    {
+      "height": 1067,
+      "sourceSha": "7476324eb7ab697f6852265760f9d6616bf28c3de0e6d9a83f3c880907806f11",
+      "sourceName": "kisspng-mask-designer-ink-pretty-black-ink-mask-5a8912da1bdad5.3876631215189326981141 копия.webp",
+      "label": "Чернила-свободный-край",
+      "family": "texture",
+      "mode": "alpha",
+      "key": "texture-11",
+      "width": 1400,
+      "bounds": [
+        2,
+        0,
+        1399,
+        1067
+      ]
+    },
+    {
+      "height": 520,
+      "sourceSha": "fff7ff1a4c22d08b383a8a27d0b5a3150f8f13fc7a3b9646f2856fb8625511da",
+      "sourceName": "kisspng-mask-message-5af86c6bf41196.9004092315262301239997.webp",
+      "label": "Фактурная-рамка",
+      "family": "texture",
+      "mode": "alpha",
+      "key": "texture-12",
+      "width": 800,
+      "bounds": [
+        0,
+        0,
+        800,
+        520
+      ]
+    },
+    {
+      "veins": false,
+      "label": "Орнамент-листва",
+      "seed": 229,
+      "family": "ornament",
+      "key": "vintage-leaves"
+    },
+    {
+      "veins": true,
+      "label": "Орнамент-листва-с-прожилками",
+      "seed": 319,
+      "family": "ornament",
+      "key": "vintage-veins"
+    },
+    {
+      "label": "Рамка-из-мазков",
+      "seed": 407,
+      "family": "painted-frame",
+      "key": "painted-frame"
+    },
+    {
+      "label": "Рамка-акварельная",
+      "seed": 527,
+      "family": "painted-frame",
+      "key": "watercolor-frame"
+    }
+  ],
+  "contourNoise": 0.09,
+  "noiseStep": 12.9898,
+  "veinWidth": 0.002,
+  "contourPower": 4,
+  "ornamentSides": 4,
+  "ornamentInset": 0.075,
+  "leafJitter": 0.02,
+  "noiseScale": 43758.5453,
+  "half": 0.5,
+  "contourNodes": 160,
+  "leafHeight": 0.027,
+  "leafCount": 18,
+  "noiseSeed": 78.233,
+  "ornamentRadius": 0.045,
+  "frameLayers": [
+    {
+      "shade": 84,
+      "radius": 0.468
+    },
+    {
+      "shade": 164,
+      "radius": 0.454
+    },
+    {
+      "shade": 255,
+      "radius": 0.432
+    }
+  ],
+  "quarterTurn": 90,
+  "radiansTurn": 6.283185307179586,
+  "leafY": 0.09,
+  "seedOffset": 37,
+  "frameHoleRadius": 0.315,
+  "leafWidth": 0.017
+}

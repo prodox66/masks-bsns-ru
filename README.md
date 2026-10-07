@@ -46,3 +46,6 @@ node tests/masks-browser.mjs
 `build-fitted-masks.mjs` создаёт13 отдельных SVG: measured crop убирает пустые поля из embedded оригинала, оставляя3% скрытого отступа. Все PNG/WebP исходники сохраняются. `build-raster-masks.mjs` создаёт16 новых SVG: точки/нерегулярное зерно/полосы в четырёх направлениях с phi-шагом, плюс четыре варианта округлых диагональных полос. Общий `static-mask-set.mjs` проверяет все имена до записи и сохраняет gradient-first порядок.
 
 `BZN_MASK_SET=fitted-masks` либо `raster-masks` для `tests/mask-set-browser.mjs`:3 native Use/save/reopen цикла на square/wide/tall, opaque grayscale, малые поля либо крайние white/black25% четверти и независимые островки. Публиковать только новыеSVG и перестраивать serverindex/data штатным PHP; локальный каталог может содержать дополнительные оригиналы.
+
+## Декоративная подборка229
+`build-decorative-masks.mjs` создаёт16 SVG:12 подогнанных физических текстур из существующей библиотеки (брызги, сухая кисть, чернила, акварель, коллаж) и4 кодовых орнаментальных/мазковых рамки. Исходники проверяются по SHA и сохраняются. Внешний отступ3%; SVG уже opaque grayscale сwhite-reveal marker. `BZN_MASK_SET=decorative-masks` запускает тот же native browser probe, включая различие открытого центра у орнамента и скрытого центра у рамки из мазков.
