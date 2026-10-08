@@ -9,7 +9,7 @@ import { workspace, settle } from '../../design-bzn-ru/NewUI/tests/Canvas_Contro
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const CONFIG = Object.freeze({ settings: process.env.BZN_MASK_SET || 'fitted-masks', cycles: 3, zero: 0, one: 1, two: 2, half: .5,
     side: 320, aspects: [1, 2.5, .4], alpha: 255, stride: 4, low: 16, high: 240, edgeTolerance: .018, centerTolerance: 24,
-    quarterTurn: 90, halfTurn: 180, threeQuarterTurn: 270, minimumRibbonRuns: 3,
+    quarterTurn: 90, halfTurn: 180, threeQuarterTurn: 270, minimumRibbonRuns: 3, minimumWhiteCoverage: .75,
     host: 'https://masks.bsns.ru', id: 'mask-set-layer', asset: 'mask-set-source', color: '#94785a',
     cards: '#bznResourceLibraryGrid .bzn-resource-library-item', modal: '#maskPainterModal', gallery: '#bznResourceLibraryModal',
     next: '#bznResourceLibraryNext', ready: '#maskPainterReadyMasksButton', save: '#maskPainterSaveButton',
@@ -91,13 +91,13 @@ class MaskSetChecks {
                 assert.ok(Math.max(...result.runs) >= CONFIG.minimumRibbonRuns,'Diagonal rounded strips remain separate');
                 result.corners.forEach(pixel=>assert.deepEqual(pixel,[CONFIG.zero,CONFIG.zero,CONFIG.zero,CONFIG.alpha]));
             } else {
-                // Four independently measured quarter averages verify the exact cardinal fade and density direction.
+                // Requirement: at least three full quarters stay completely visible; only the final edge band fades.
                 const vertical = variant.angle === CONFIG.quarterTurn || variant.angle === CONFIG.threeQuarterTurn;
                 let bands = vertical ? [...result.rows] : [...result.bands];
                 if(variant.angle === CONFIG.halfTurn || variant.angle === CONFIG.threeQuarterTurn) bands.reverse();
-                assert.equal(bands[CONFIG.zero],CONFIG.alpha,'First quarter is completely white');
-                assert.equal(bands.at(-CONFIG.one),CONFIG.zero,'Last quarter is completely black');
-                assert.ok(bands[CONFIG.one] > bands[CONFIG.two],'Native raster gets denser across the middle');
+                bands.slice(CONFIG.zero, -CONFIG.one).forEach(value => assert.equal(value,CONFIG.alpha,'First three quarters are completely white'));
+                assert.ok(bands.at(-CONFIG.one) > CONFIG.zero && bands.at(-CONFIG.one) < CONFIG.alpha,'Only the final edge band contains the fade');
+                assert.ok(result.white / (result.size[CONFIG.zero] * result.size[CONFIG.one]) >= CONFIG.minimumWhiteCoverage,'Mask retains at least 75% completely visible pixels');
             }
         }
         if (CONFIG.settings === 'decorative-masks') {

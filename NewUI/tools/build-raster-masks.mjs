@@ -1,5 +1,6 @@
 // Deterministic code-native edge rasters and rounded diagonal strips; no inference or raster-source rewriting.
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile, copyFile, mkdtemp, utimes } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { StaticMaskSet } from './static-mask-set.mjs';
@@ -17,7 +18,7 @@ export class RasterMaskSet extends StaticMaskSet {
         const config = this.config, columns = [], end = config.one - config.blackTail, transition = end - config.whiteTail;
         let x = config.whiteTail, index = config.zero;
         while (x < end) {
-            // Loop: width grows while spacing falls, approaching a completely hidden final quarter.
+            // Loop: density grows only in the configured edge transition, preserving the white plateau.
             const progress = (x - config.whiteTail) / transition;
             const pitch = config.basePitch * this.goldenRatio ** (config.one - config.two * progress);
             columns.push({x,progress,pitch,index}); x += pitch; index += config.one;
@@ -80,13 +81,49 @@ export class RasterMaskSet extends StaticMaskSet {
         const shapes = isRibbon ? `<g transform="${transform}" fill="white">${this.ribbons(variant)}</g>`
             : `<g transform="${transform}"><g clip-path="url(#transition)" fill="black">${variant.family === 'stripes' ? this.stripes() : this.grains(variant.family)}</g><rect x="${end}" y="${-config.outside}" width="${config.one}" height="${height}" fill="black"/></g>`;
         const clipping = isRibbon ? `<g transform="scale(${config.side})" clip-path="url(#transition)"><g transform="scale(${config.one / config.side})">${shapes}</g></g>` : shapes;
-        return `<svg xmlns="http://www.w3.org/2000/svg" width="${config.side}" height="${config.side}" viewBox="${config.zero} ${config.zero} ${config.side} ${config.side}">${config.luminanceMetadata}<title>${this.xml(variant.label)}</title><desc>Белое показывает, чёрное скрывает. Толщина и шаг меняются с φ=${this.number(this.goldenRatio)}; крайние четверти растров полностью белая и чёрная.</desc><defs><clipPath id="transition">${clip}</clipPath></defs><rect width="${config.side}" height="${config.side}" fill="${isRibbon ? 'black' : 'white'}"/>${clipping}</svg>\n`;
+        const description = isRibbon ? `Белое показывает, чёрное скрывает. Толщина и шаг меняются с φ=${this.number(this.goldenRatio)}; крайние четверти растров полностью белая и чёрная.` : this.xml(config.edgeDescription);
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="${config.side}" height="${config.side}" viewBox="${config.zero} ${config.zero} ${config.side} ${config.side}">${config.luminanceMetadata}<title>${this.xml(variant.label)}</title><desc>${description}</desc><defs><clipPath id="transition">${clip}</clipPath></defs><rect width="${config.side}" height="${config.side}" fill="${isRibbon ? 'black' : 'white'}"/>${clipping}</svg>\n`;
+    }
+
+    /** An explicit migration updates only outputs still matching this set's recorded source hashes. */
+    async refreshOwned(root = LOCATIONS.root) {
+        const config = this.config, output = path.resolve(root, config.outputDirectory);
+        const manifestPath = path.join(output, config.manifestName);
+        const manifest = JSON.parse(await readFile(manifestPath, config.encoding)), records = await this.records(root);
+        const changed = [];
+        for (const record of records) {
+            // Guard: every existing name and byte must belong to the previous owned manifest; unknown edits stop the entire migration.
+            const previous = manifest.records.find(item => item.name === record.name && item.key === record.key);
+            const currentHash = this.digest(await readFile(path.join(output, record.name)));
+            if (!previous || currentHash !== previous.sha256) throw new Error(`Owned mask changed outside this migration: ${record.name}`);
+            if (record.sha256 !== currentHash) changed.push(record);
+        }
+        if (!changed.length) return manifest.records;
+        const backup = await mkdtemp(path.join(tmpdir(), config.backupPrefix));
+        await copyFile(manifestPath, path.join(backup, config.manifestName));
+        for (const record of changed) {
+            // Preserve every affected previous source before the first replacement; stock and capsule assets are never written here.
+            await copyFile(path.join(output, record.name), path.join(backup, record.name));
+        }
+        const timestamp = new Date(manifest.orderingTimestamp);
+        for (const record of changed) {
+            // Write only individually preflighted generated resources, retaining the existing gallery order.
+            const filename = path.join(output, record.name);
+            await writeFile(filename, record.source, config.encoding);
+            await utimes(filename, timestamp, timestamp);
+        }
+        const metadata = records.map(({ source, ...record }) => record);
+        await writeFile(manifestPath, JSON.stringify({ ...manifest, records: metadata }, null, config.two), config.encoding);
+        console.log(`Preserved previous owned sources: ${backup}`);
+        return metadata;
     }
 }
 
 /** Imports are read-only; explicit CLI publishes only this named set locally. */
 async function main() {
     const config = JSON.parse(await readFile(path.join(LOCATIONS.root,LOCATIONS.configuration),'utf8'));
-    const records = await new RasterMaskSet(config).write(); console.log(`Raster masks: ${records.length}, deterministic phi spacing and rounded diagonals.`);
+    const set = new RasterMaskSet(config);
+    const records = process.argv.includes(config.ownedUpdateFlag) ? await set.refreshOwned() : await set.write();
+    console.log(`Raster masks: ${records.length}, deterministic phi spacing and rounded diagonals.`);
 }
 if(process.argv[LOCATIONS.argument]&&path.resolve(process.argv[LOCATIONS.argument])===fileURLToPath(import.meta.url)) await main();
