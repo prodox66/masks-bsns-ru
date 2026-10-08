@@ -1,0 +1,13 @@
+{
+    "outputDirectory": "NewUI/masks", "manifestName": "basic-shape-set.json", "orderingManifestName": "gradient-set.json",
+    "filePrefix": "000-Фигура", "separator": "-", "extension": ".svg", "indexWidth": 2,
+    "side": 512, "zero": 0, "one": 1, "two": 2, "half": 0.5, "precision": 6, "encoding": "utf8",
+    "margin": 0.03, "minimumMargin": 0.025, "maximumMargin": 0.045,
+    "ellipseLongRadius": 0.62, "ellipseShortRadius": 0.235,
+    "luminanceMetadata": "<metadata id=\"bzn-mask-luminance\">white-reveal</metadata>",
+    "variants": [
+        { "key": "circle", "label": "Круг", "family": "circle", "angle": 0 },
+        { "key": "oval-right", "label": "Овал-диагональ-вправо", "family": "ellipse", "angle": -45 },
+        { "key": "oval-left", "label": "Овал-диагональ-влево", "family": "ellipse", "angle": 45 }
+    ]
+}

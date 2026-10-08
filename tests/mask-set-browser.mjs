@@ -85,6 +85,12 @@ class MaskSetChecks {
             result.bounds.forEach(value => assert.ok(value >= SETTINGS.margin - CONFIG.edgeTolerance && value <= SETTINGS.margin + CONFIG.edgeTolerance, `${record.name}: margin ${value}`));
             result.corners.forEach(pixel=>assert.deepEqual(pixel,[CONFIG.zero,CONFIG.zero,CONFIG.zero,CONFIG.alpha]));
         }
+        if (CONFIG.settings === 'basic-shape-masks') {
+            // The requested silhouettes fill their frame while leaving a small usable outside margin.
+            result.bounds.forEach(value => assert.ok(value >= SETTINGS.minimumMargin - CONFIG.edgeTolerance && value <= SETTINGS.maximumMargin + CONFIG.edgeTolerance, `${record.name}: small outside margin ${value}`));
+            result.corners.forEach(pixel => assert.deepEqual(pixel,[CONFIG.zero,CONFIG.zero,CONFIG.zero,CONFIG.alpha]));
+            assert.deepEqual(result.center,[CONFIG.alpha,CONFIG.alpha,CONFIG.alpha,CONFIG.alpha],'The shape center stays fully visible');
+        }
         if (CONFIG.settings === 'raster-masks') {
             const variant = SETTINGS.variants.find(variant => variant.key === record.key);
             if (variant.family === 'capsules') {
