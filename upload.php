@@ -5,6 +5,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/resource-admin/MaskOrder.php';
+
 // No PHP session/cookie/header dependency is used here.
 // Authentication is password-only. The password is carried in POST forms/API requests.
 // CORS for static mask resources is handled by the site's .htaccess.
@@ -209,7 +211,7 @@ function listMaskNames(string $maskDirectory, array $supportedMimeByExtension): 
         });
     }
 
-    return $names;
+    return (new BznMaskOrder($maskDirectory))->ordered($names);
 }
 
 function atomicWrite(string $targetFile, string $contents): void
@@ -533,6 +535,9 @@ function deleteMaskTransactional(
     }
 }
 
+
+// Library-only consumers reuse the existing validated helpers without dispatching the legacy password page.
+if (defined('BZN_MASK_LIBRARY_ONLY') && BZN_MASK_LIBRARY_ONLY === true) return;
 
 $action = (string) ($_POST['action'] ?? $_GET['action'] ?? '');
 $directPassword = requestPassword();

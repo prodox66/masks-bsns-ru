@@ -11,6 +11,7 @@ const DATA_GLOBAL_KEY = 'BZNReadyMaskData';
 const REVISION_GLOBAL_KEY = 'BZNReadyMaskRevision';
 const SORT_LOCALE = 'ru';
 const SORT_OPTIONS = Object.freeze({ numeric: true, sensitivity: 'base' });
+const CATALOG_SETTINGS = JSON.parse(await readFile(new URL('../../config/mask-catalog.json', import.meta.url), 'utf8'));
 const OUTPUT_INDEX_WIDTH = 3;
 const OUTPUT_EXTENSION = '.js';
 const TEXT_ENCODING = 'utf8';
@@ -35,8 +36,14 @@ async function discoveredMaskNames() {
         const metadata = await stat(path.join(MASK_DIRECTORY, entry.name));
         return Object.freeze({ name: entry.name, modified: metadata.mtimeMs });
     }));
-    return records.sort((left, right) => right.modified - left.modified
+    const names = records.sort((left, right) => right.modified - left.modified
         || left.name.localeCompare(right.name, SORT_LOCALE, SORT_OPTIONS)).map((record) => record.name);
+    let order;
+    try { order = JSON.parse(await readFile(path.join(MASK_DIRECTORY, CATALOG_SETTINGS.orderFile), CATALOG_SETTINGS.encoding)); }
+    catch (error) { if (error.code === 'ENOENT') return names; throw error; }
+    // Existing source order remains the fallback; explicit administrator positions live in separate metadata.
+    const ranks = new Map(order.names.map((name,index) => [name,index]));
+    return [...names.filter(name => !ranks.has(name)), ...names.filter(name => ranks.has(name)).sort((left,right) => ranks.get(left)-ranks.get(right))];
 }
 
 // Function: the browser-readable classic script is rebuilt from the actual directory rather than a hand-maintained list.

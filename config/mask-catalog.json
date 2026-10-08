@@ -1,0 +1,7 @@
+{
+    "orderFile": ".mask-order.json", "version": 1, "zero": 0, "one": 1, "jsonIndent": 2,
+    "encoding": "utf8", "hash": "sha256", "sourceFolder": "NewUI/masks", "dataFolder": "data",
+    "indexFile": "files.js", "lockFile": ".rebuild.lock", "mutationLock": ".admin-mutations.lock", "libraryOnlyFlag": "BZN_MASK_LIBRARY_ONLY",
+    "trashFolder": ".admin-trash", "archiveDate": "Ymd-His", "archiveRandomBytes": 6,
+    "fileMode": 384, "directoryMode": 448, "uploadField": "masks", "successKey": "ok"
+}

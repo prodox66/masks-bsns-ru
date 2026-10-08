@@ -14,6 +14,7 @@ const FIXTURES = Object.freeze([
     { name: 'middle.webp', time: 1000000200 },
 ]);
 const EXPECTED = Object.freeze(['z-new.webp', 'middle.webp', 'a-old.webp']);
+const CATALOG_SETTINGS_PATH = path.join(ROOT, 'config', 'mask-catalog.json');
 
 // Function: execute the real generator in a tiny isolated tree and verify index-to-payload identity.
 async function verifyGenerator() {
@@ -24,6 +25,9 @@ async function verifyGenerator() {
     try {
         await mkdir(maskRoot, { recursive: true });
         await mkdir(toolRoot, { recursive: true });
+        const configurationRoot = path.join(fixtureRoot, 'config');
+        await mkdir(configurationRoot, { recursive: true });
+        await copyFile(CATALOG_SETTINGS_PATH, path.join(configurationRoot, 'mask-catalog.json'));
         const generator = path.join(toolRoot, 'build-ready-mask-data.mjs');
         await copyFile(path.join(ROOT, 'NewUI', 'tools', 'build-ready-mask-data.mjs'), generator);
         for (const fixture of FIXTURES) {
@@ -46,6 +50,12 @@ async function verifyGenerator() {
             assert.equal(payload.window.BZNReadyMaskData.name, name);
             assert.equal(Buffer.from(payload.window.BZNReadyMaskData.dataUrl.split(',').at(-1), 'base64').toString(ENCODING), name);
         }
+        const settings = JSON.parse(await readFile(CATALOG_SETTINGS_PATH, ENCODING));
+        const chosen = [...EXPECTED].reverse();
+        await writeFile(path.join(maskRoot,settings.orderFile),JSON.stringify({version:settings.version,names:chosen}),ENCODING);
+        execFileSync(process.execPath,[generator],{stdio:'pipe'});
+        const ordered = {window:{}}; vm.runInNewContext(await readFile(path.join(maskRoot,'files.js'),ENCODING),ordered);
+        assert.deepEqual(Array.from(ordered.window.BZNReadyMaskFiles),chosen,'Manual order survives a complete catalog rebuild');
     } finally {
         // Branch: remove only the exact temporary fixture created by this test.
         const relative = path.relative(temporaryRoot, fixtureRoot);

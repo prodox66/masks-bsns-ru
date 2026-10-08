@@ -16,6 +16,7 @@ final class MaskOrderContract
     // Function: load only the actual pure listing function; authorization and page dispatch never execute.
     public static function load(string $sourcePath): void
     {
+        require_once dirname($sourcePath) . '/resource-admin/MaskOrder.php';
         $source = file_get_contents($sourcePath);
         if (!preg_match('/function listMaskNames\([^\n]+\n\{.*?\n\}/s', $source, $match)) {
             throw new RuntimeException('listMaskNames function was not found.');
